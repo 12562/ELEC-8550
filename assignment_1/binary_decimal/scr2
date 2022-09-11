@@ -1,0 +1,11 @@
+#! /bin/csh
+
+set bits = (0000 0001 0010 0011 0100 0101 0110 0111 1000)
+
+set result = ""
+foreach num ( $bits ) 
+   set num_bits = `echo $num | sed 's/ */ /g'`
+   set res = `echo "($num_bits[1] * $argv[1] * $argv[1] * $argv[1]) + ($num_bits[2] * $argv[1] * $argv[1] ) + ($num_bits[3] * $argv[1]) + ($num_bits[4] * 1) " | bc -l`
+   set result = "$result $res"
+end
+echo $result

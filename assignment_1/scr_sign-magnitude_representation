@@ -1,0 +1,39 @@
+#! /bin/csh
+
+echo "Enter decimal number: "
+set decimal_number = "$<"
+set number = `echo $decimal_number | sed 's/-//g'`
+echo "Enter number of integer bits in binary notation : "
+set k = "$<"
+echo "Enter number of fractional bits in binary notation : "
+set m = "$<"
+
+set str = `csh /home/mohit/Downloads/uwindsor/computer_arithmetic/assignment_1/scr_decimal_to_binary_conversion "$number" `
+set binary = `echo $str | awk -F '#' '{print $1}' |  awk -F ':' '{print $2}'  | sed 's/ *//g'`
+set num_integer_bits = `echo $str | awk -F '#' '{print $2}' | awk -F ':' '{print $2}' | sed 's/ *//g'`
+set num_fractional_bits = `echo $str | awk -F '#' '{print $3}' | awk -F ':' '{print $2}' | sed 's/ *//g'`
+
+if ( $k < $num_integer_bits || $m < $num_fractional_bits ) then
+   echo "Number of bits specified are less than the number of bits required to represent the number in binary form"
+endif
+
+if ( `echo $decimal_number | grep '\-' | wc -l ` > 0 ) then
+   set sign_bit = 1
+else
+   set sign_bit = 0
+endif
+
+while ( $num_integer_bits < $k - 1 )
+   set binary = "0$binary"
+   @ num_integer_bits = ( $num_integer_bits + 1 )
+end
+
+while ( $num_fractional_bits < $m  )
+   set binary = "${binary}0"
+   @ num_fractional_bits = ( $num_fractional_bits + 1 )
+end
+
+
+echo $sign_bit$binary
+echo "`echo $sign_bit$binary | sed 's/\..*//g' | rev | sed 's/\(....\)/\1_/g' | rev`.`echo $sign_bit$binary | sed 's/.*\.//g'  | sed 's/\(....\)/\1_/g'`"
+

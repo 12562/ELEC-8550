@@ -1,0 +1,38 @@
+#! /bin/csh
+
+set decimal_value = "$argv"
+if ( `echo $decimal_value | grep "\." | wc -l ` > 0 ) then
+   set int = `echo $decimal_value | sed 's/\..*//g'`
+   set frac = `echo $decimal_value | sed 's/.*\./0\./g'`
+else
+   set int = $decimal_value
+   set frac = 0
+endif
+
+echo $int
+set quo = $int
+set binary_int = ()
+while ( $quo != 0 )
+  set rem = `echo "$quo % 2"  | bc`
+  set quo = `echo "$quo / 2"  | bc`
+  set binary_int = ( $rem $binary_int )
+end
+
+echo $frac
+if ( $frac != 0 ) then
+   set fractional = $frac
+   set binary_frac = ()
+   while ( $fractional != 0 ) 
+     set integral   = `echo "$fractional * 2" | bc | sed 's/^\./0\./g' | sed 's/\..*//g'`
+     set fractional = `echo "$fractional * 2" | bc | sed 's/.*\./0\./g' | sed 's/\.\?0\+$//g'`
+     set binary_frac = ( $binary_frac $integral )
+   end
+else
+   set binary_frac = "0"
+endif
+
+
+set representation = `echo $binary_int.$binary_frac | sed 's/ //g'`
+echo "Binary representation : $representation"
+echo "#Integer bits : $#binary_int"
+echo "#Fractional bits : $#binary_frac"

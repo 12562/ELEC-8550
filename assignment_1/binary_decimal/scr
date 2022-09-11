@@ -1,0 +1,13 @@
+
+set div = $argv
+set res = ""
+
+echo "l ( $div ) / l ( 2 )" | bc -l | sed 's/\..*//g' | xargs echo "1 +" | bc  -l 
+while ( $div != 0 ) 
+  set quo = `echo "$div / 2" | bc`
+  set rem = `echo "$div % 2" | bc`
+  set div = $quo
+  set res = ($rem ${res}) 
+end
+
+echo $#res
